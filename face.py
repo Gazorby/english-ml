@@ -3,30 +3,28 @@ import numpy as np
 import matplotlib as plot
 import os
 
-
-def init(imgDir):
-    imgList = os.listdir(imgDir)
-    imgMat = []
-    for img in imgList:
-        tmp = cv.imread('./training/' + img)
-        imgMat.append(cv.cvtColor(tmp, cv.COLOR_BGR2GRAY))
-    return imgMat
-
-
-images = cv.imread('./training/gari2.jpeg')
-gray = cv.cvtColor(images, cv.COLOR_BGR2GRAY)
 face_cascade = cv.CascadeClassifier('./frontface_template.xml')
-faces = face_cascade.detectMultiScale(images,
-                                      scaleFactor=1.1,
-                                      minNeighbors=5)
+eye_cascade = cv.CascadeClassifier('./eye_template.xml')
 
-print("Found {0} faces!".format(len(faces)))
 
-for (x, y, w, h) in faces:
-    cv.rectangle(images, (x, y), (x+w, y+h), (0, 255, 0), 2)
-    # roi_gray = images[y:y+h, x:x+w]
-    # roi_color = img[y:y+h, x:x+w]
+def detectFace(imgPath, eye=True):
+    frame = cv.imread(imgPath, cv.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(
+        frame, scaleFactor=1.1, minNeighbors=5)
+    for (x, y, w, h) in faces:
+        cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        if eye is True:
+            roi_gray = frame[y:y+h, x:x+w]
+            roi_color = frame[y:y+h, x:x+w]
+            eyes = eye_cascade.detectMultiScale(roi_gray, 1.1, 3)
+            for (ex, ey, ew, eh) in eyes:
+                cv.rectangle(roi_color, (ex, ey),
+                             (ex+ew, ey+eh), (255, 0, 0), 2)
+    return frame
 
-cv.imshow("Faces found", images)
+
+frame = detectFace('./training/gari.jpg')
+
+cv.imshow("Faces found", frame)
 cv.waitKey(0)
 cv.destroyAllWindows()
