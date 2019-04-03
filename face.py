@@ -16,6 +16,15 @@ upperbody_cascade = cv.CascadeClassifier('./upperbody_template.xml')
 
 
 def getLabels(path):
+    """ Get labels based on filenames
+
+    Arguments:
+        path {string} -- Path where image filename will be read from
+
+    Returns:
+        {array} -- An array containing labels found
+    """
+
     pattern = '([a-z]|[A-Z])*'
     labels = []
     for f in listdir(path):
@@ -24,9 +33,25 @@ def getLabels(path):
     return labels
 
 
-def detect(imgPath, eye=True, smile=False, fullBody=False, upperBody=False, lowerBody=False):
+def detect(path, eye=False, smile=False, fullBody=False, upperBody=False, lowerBody=False):
+    """ Detetct face(s) in image
+
+    Arguments:
+        path {string} -- Path of the image
+
+    Keyword Arguments:
+        eye {bool} -- enabled eye detection (default: {False})
+        smile {bool} -- enabled smile detection (default: {False})
+        fullBody {bool} -- enabled fullbody detection (default: {False})
+        upperBody {bool} -- enabled upperBody detection (default: {False})
+        lowerBody {bool} -- enabled lowerBody detection (default: {False})
+
+    Returns:
+        {image} -- Black and white image cropped around the face
+    """
+
     # Read open image and convert it in black and white
-    frame = cv.imread(imgPath)
+    frame = cv.imread(path)
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
     # Faces are the tuples of 4 numbers
@@ -65,7 +90,7 @@ def detect(imgPath, eye=True, smile=False, fullBody=False, upperBody=False, lowe
     return frame
 
 
-frame = detect('./training/gari.jpg')
+frame = detect('./training/gari2.jpeg')
 
 cv.imshow("Faces found", frame)
 cv.waitKey(0)
