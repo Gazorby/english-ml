@@ -14,7 +14,8 @@ upperbody_cascade = cv.CascadeClassifier('./upperbody_template.xml')
 
 def detect(imgPath, eye=True, smile=False, fullBody=False, upperBody=False, lowerBody=False):
     # Read open image and convert it in black and white
-    frame = cv.imread(imgPath, cv.COLOR_BGR2GRAY)
+    frame = cv.imread(imgPath)
+    frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
     # Faces are the tuples of 4 numbers
     # x,y => upperleft corner coordinates of face
