@@ -2,6 +2,9 @@ import cv2 as cv
 import numpy as np
 import matplotlib as plot
 import os
+from os import listdir
+from os.path import isfile, join
+import re
 
 # Loading haar cascade
 face_cascade = cv.CascadeClassifier('./frontface_template.xml')
@@ -10,6 +13,15 @@ smile_cascade = cv.CascadeClassifier('./smile_template.xml')
 lowerbody_cascade = cv.CascadeClassifier('./lowerbody_template.xml')
 fullbody_cascade = cv.CascadeClassifier('./fullbody_template.xml')
 upperbody_cascade = cv.CascadeClassifier('./upperbody_template.xml')
+
+
+def getLabels(path):
+    pattern = '([a-z]|[A-Z])*'
+    labels = []
+    for f in listdir(path):
+        if isfile(join(path, f)):
+            labels.append(re.search(pattern, f).group(0))
+    return labels
 
 
 def detect(imgPath, eye=True, smile=False, fullBody=False, upperBody=False, lowerBody=False):
