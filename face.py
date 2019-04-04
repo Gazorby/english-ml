@@ -24,7 +24,6 @@ def getLabels(path):
     Returns:
         {array} -- An array containing labels found
     """
-
     pattern = '([a-z]|[A-Z])*'
     labels = []
     for f in listdir(path):
@@ -34,7 +33,7 @@ def getLabels(path):
 
 
 def detect(path, eye=False, smile=False, fullBody=False, upperBody=False, lowerBody=False):
-    """ Detetct face(s) in image
+    """ Detect face(s) in image
 
     Arguments:
         path {string} -- Path of the image
@@ -51,7 +50,7 @@ def detect(path, eye=False, smile=False, fullBody=False, upperBody=False, lowerB
     """
 
     # Read open image and convert it in black and white
-    frame = cv.imread(path)
+    frame = cv.imread(path,)
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
     # Faces are the tuples of 4 numbers
@@ -87,10 +86,11 @@ def detect(path, eye=False, smile=False, fullBody=False, upperBody=False, lowerB
             for (ex, ey, ew, eh) in eyes:
                 cv.rectangle(roi_color, (ex, ey),
                              (ex+ew, ey+eh), (255, 0, 0), 2)
-    return frame
+    print(x, y)
+    return frame[y:y+h, x:x+w]
 
 
-frame = detect('./training/gari2.jpeg')
+frame = detect('./training/gari.jpg')
 
 cv.imshow("Faces found", frame)
 cv.waitKey(0)
